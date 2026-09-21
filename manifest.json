@@ -1,0 +1,13 @@
+{
+  "name": "Bora Bora — доставка",
+  "short_name": "Bora Bora",
+  "description": "Доставка пиццы, закусок и авторских лимонадов в Солнечнодольске",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fdf4ef",
+  "theme_color": "#fdf4ef",
+  "icons": [
+    { "src": "img/logo.png", "sizes": "360x360", "type": "image/png", "purpose": "any" }
+  ]
+}
