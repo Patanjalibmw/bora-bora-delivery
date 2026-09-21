@@ -1,0 +1,7 @@
+# исходники фото в полном разрешении в репозиторий не кладём
+img/original/
+*.psd
+*.zip
+.DS_Store
+Thumbs.db
+.vercel/

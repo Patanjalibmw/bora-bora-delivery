@@ -10,6 +10,9 @@
 <link rel="apple-touch-icon" href="img/logo.png">
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-title" content="Bora Bora">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
 
 :root {
@@ -32,10 +35,10 @@ button, input, textarea, select { font-family: inherit; font-size: inherit; colo
 body {
   background: var(--cream);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 90px;
+  padding-bottom: 84px;
 }
 body.locked { overflow: hidden; }
 
@@ -72,7 +75,7 @@ header, main, footer, .nav-wrap { position: relative; z-index: 1; }
 .brand-logo { width: 38px; height: 38px; flex-shrink: 0; }
 .brand-txt { display: flex; flex-direction: column; line-height: 1; }
 .brand-name {
-  font-family: Georgia, serif; font-style: italic; font-weight: 700;
+  font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-weight: 700;
   font-size: 22px; color: var(--pink); letter-spacing: -.5px;
 }
 .brand-sub {
@@ -129,7 +132,7 @@ header, main, footer, .nav-wrap { position: relative; z-index: 1; }
 @keyframes logoIn { from { opacity: 0; transform: translateY(14px) scale(.85) } }
 
 .hero-title {
-  font-family: Georgia, serif; font-size: 25px; font-weight: 400;
+  font-family: 'Playfair Display', Georgia, serif; font-size: 25px; font-weight: 400;
   letter-spacing: .5px; line-height: 1.3; margin-bottom: 9px;
 }
 .hero-title i { font-style: italic; color: var(--pink); font-weight: 700; }
@@ -255,6 +258,27 @@ header, main, footer, .nav-wrap { position: relative; z-index: 1; }
 .card-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .card-price { font-size: 17px; font-weight: 900; color: var(--pink); letter-spacing: -.4px; white-space: nowrap; }
 .card.wide .card-price { font-size: 22px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.card-tag {
+  font-size: 8.5px; font-weight: 700; letter-spacing: .3px;
+  padding: 3px 8px; border-radius: 10px;
+  background: rgba(227,168,194,.22); color: var(--pink2);
+}
+.card.wide .card-tag { font-size: 9.5px; padding: 4px 10px; }
+
+/* ── КНОПКА «НАВЕРХ» ── */
+#toTop {
+  position: fixed; right: 14px; bottom: 96px; z-index: 88;
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line);
+  background: rgba(253,244,239,.92); backdrop-filter: blur(10px);
+  color: var(--pink); font-size: 18px; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(140,60,90,.18);
+  opacity: 0; visibility: hidden; transform: translateY(12px);
+  transition: opacity .25s, transform .25s, visibility .25s;
+}
+#toTop.on { opacity: 1; visibility: visible; transform: none; }
+#toTop:active { transform: scale(.9); }
+
 .card-prices { display: flex; flex-direction: column; line-height: 1.1; }
 .card-old {
   font-size: 11px; color: var(--ink-soft); text-decoration: line-through;
@@ -310,7 +334,7 @@ header, main, footer, .nav-wrap { position: relative; z-index: 1; }
 .empty-search.on { display: block; }
 
 /* ══════════════ ИНФО-БЛОК ══════════════ */
-.info { padding: 40px 14px 10px; }
+.info { padding: 26px 14px 6px; }
 .info-grid { display: grid; gap: 11px; grid-template-columns: 1fr; }
 .info-card {
   background: rgba(255,255,255,.8); border: 1px solid var(--line);
@@ -326,15 +350,15 @@ header, main, footer, .nav-wrap { position: relative; z-index: 1; }
 .info-card a { color: var(--pink); font-weight: 700; text-decoration: none; }
 
 /* ══════════════ ФУТЕР ══════════════ */
-footer { padding: 36px 20px 30px; text-align: center; }
+footer { padding: 22px 20px 26px; text-align: center; }
 .footer-logo {
-  width: 92px; height: 92px; margin: 0 auto 10px; opacity: .9;
+  width: 78px; height: 78px; margin: 0 auto 8px; opacity: .9;
   filter: drop-shadow(0 6px 16px rgba(140,60,90,.18));
 }
-.footer-flowers { font-size: 15px; letter-spacing: 9px; opacity: .5; margin-bottom: 14px; }
+.footer-flowers { font-size: 14px; letter-spacing: 8px; opacity: .45; margin-bottom: 12px; }
 
 /* ── СОЦСЕТИ ── */
-.socials { display: flex; gap: 11px; justify-content: center; margin-bottom: 18px; }
+.socials { display: flex; gap: 11px; justify-content: center; margin-bottom: 14px; }
 .soc {
   width: 44px; height: 44px; border-radius: 50%;
   display: grid; place-items: center; text-decoration: none;
@@ -397,7 +421,7 @@ footer { padding: 36px 20px 30px; text-align: center; }
   display: flex; align-items: center; gap: 12px;
   padding: 16px 18px 12px; border-bottom: 1px solid var(--line);
 }
-.sheet-head h2 { font-family: Georgia, serif; font-size: 21px; font-weight: 400; margin-right: auto; }
+.sheet-head h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 21px; font-weight: 400; margin-right: auto; }
 .sheet-head h2 i { font-style: italic; color: var(--pink); }
 .sheet-close {
   width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line);
@@ -544,7 +568,7 @@ footer { padding: 36px 20px 30px; text-align: center; }
   box-shadow: 0 3px 12px rgba(58,38,48,.2);
 }
 .dish-info { padding: 16px 0 4px; }
-.dish-name { font-family: Georgia, serif; font-size: 23px; line-height: 1.25; margin-bottom: 8px; }
+.dish-name { font-family: 'Playfair Display', Georgia, serif; font-size: 23px; line-height: 1.25; margin-bottom: 8px; }
 .dish-desc { font-size: 14px; line-height: 1.6; color: var(--ink-soft); }
 .dish-weight {
   display: inline-block; margin-top: 12px;
@@ -702,6 +726,8 @@ footer { padding: 36px 20px 30px; text-align: center; }
   <div class="sheet-foot" id="dishFoot"></div>
 </div>
 
+<button id="toTop" aria-label="Наверх">↑</button>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -772,15 +798,15 @@ const MENU = [
   {
     id: 'pizza', emoji: '🍕', title: 'Пицца 30 см',
     items: [
-      { name: 'Маргарита',            price: 490, img: 'img/margarita.jpg',        icon: '🍕',
-        desc: 'Моцарелла, томатный соус, помидоры' },
       { name: 'Пепперони',            price: 490, img: 'img/pepperoni.jpg',        icon: '🍕', badge: 'Хит',
         desc: 'Моцарелла, томатный соус, колбаса пепперони' },
-      { name: 'Кватро формаджи',      price: 490, img: 'img/kvatro-formaggi.jpg',  icon: '🧀',
+      { name: 'Маргарита',            price: 490, tags: ['🌱 Вег'], img: 'img/margarita.jpg',        icon: '🍕',
+        desc: 'Моцарелла, томатный соус, помидоры' },
+      { name: 'Кватро формаджи',      price: 490, tags: ['🌱 Вег'], img: 'img/kvatro-formaggi.jpg',  icon: '🧀',
         desc: 'Пармезан, дорблю, моцарелла, чеддер' },
       { name: 'Цезарь',               price: 490, img: 'img/cezar.jpg',            icon: '🥗',
         desc: 'Соус цезарь, курица, томаты черри, микс салатов, моцарелла, пармезан' },
-      { name: 'Грибная',              price: 490, img: 'img/gribnaya.jpg',         icon: '🍄',
+      { name: 'Грибная',              price: 490, tags: ['🌱 Вег'], img: 'img/gribnaya.jpg',         icon: '🍄',
         desc: 'Сливочный соус, шампиньоны' },
       { name: 'Барбекю',              price: 490, img: 'img/barbecue.jpg',         icon: '🔥',
         desc: 'Томатный соус, бекон, пепперони, фиолетовый лук, моцарелла, соус барбекю' },
@@ -788,9 +814,9 @@ const MENU = [
         desc: 'Моцарелла, томатный соус, ветчина' },
       { name: 'Ветчина с грибами',    price: 490, img: 'img/vetchina-griby.jpg',   icon: '🍕',
         desc: 'Моцарелла, томатный соус, ветчина, шампиньоны' },
-      { name: 'Дьябло',               price: 490, img: 'img/dyablo.jpg',           icon: '🌶️',
+      { name: 'Дьябло',               price: 490, tags: ['🌶 Остро'], img: 'img/dyablo.jpg',           icon: '🌶️',
         desc: 'Томатный соус, бекон, пепперони, фиолетовый лук, моцарелла, халапеньо, острый соус' },
-      { name: 'С грушей и горгонзолой', price: 590, img: 'img/grusha-gorgonzola.jpg', icon: '🍐',
+      { name: 'С грушей и горгонзолой', price: 590, tags: ['🌱 Вег'], img: 'img/grusha-gorgonzola.jpg', icon: '🍐',
         desc: 'Моцарелла, дорблю, руккола, кедровые орехи, мёд' },
       { name: 'С морепродуктами',     price: 690, img: 'img/seafood.jpg',          icon: '🦐', badge: 'Премиум',
         desc: 'Соус том-ям, тигровая креветка, кальмар, моцарелла, черри, руккола' },
@@ -816,11 +842,11 @@ const MENU = [
   {
     id: 'drinks', emoji: '🍹', title: 'Авторские лимонады',
     items: [
-      { name: 'Лимонад цитрусовый',  weight: '0,5 л', price: 150, img: 'img/limonad-citrus.jpg', icon: '🍋',
+      { name: 'Лимонад цитрусовый',  weight: '0,5 л', price: 150, tags: ['✨ Новинка'], img: 'img/limonad-citrus.jpg', icon: '🍋',
         desc: 'Лимон, апельсин, лайм' },
-      { name: 'Лимонад тропический', weight: '0,5 л', price: 150, img: 'img/limonad-tropic.jpg', icon: '🥭',
+      { name: 'Лимонад тропический', weight: '0,5 л', price: 150, tags: ['✨ Новинка'], img: 'img/limonad-tropic.jpg', icon: '🥭',
         desc: 'Маракуйя, манго, ананас' },
-      { name: 'Лимонад ягодный',     weight: '0,5 л', price: 150, img: 'img/limonad-berry.jpg',  icon: '🍓',
+      { name: 'Лимонад ягодный',     weight: '0,5 л', price: 150, tags: ['✨ Новинка'], img: 'img/limonad-berry.jpg',  icon: '🍓',
         desc: 'Клубника, малина, смородина' },
     ]
   },
@@ -902,6 +928,7 @@ function setQty(id, q) {
 }
 const add = (id, from) => {
   setQty(id, (cart[id] || 0) + 1);
+  if (navigator.vibrate) navigator.vibrate(12);
   if (from) fly(from); else toast(ITEMS[id].name + ' — в корзине');
 };
 
@@ -956,7 +983,7 @@ MENU.forEach((cat, ci) => {
 
   cat.items.forEach((item, i) => {
     const card = document.createElement('article');
-    card.className = 'card' + (item.wide ? ' wide' : '');
+    card.className = 'card' + (item.wide || i === 0 ? ' wide' : '');
     card.dataset.id = item.id;
     card.dataset.search = (item.name + ' ' + (item.desc || '') + ' ' + cat.title).toLowerCase();
     card.style.transitionDelay = ((i % 2) * 80 + 30) + 'ms';
@@ -994,6 +1021,8 @@ MENU.forEach((cat, ci) => {
     const body = document.createElement('div');
     body.className = 'card-body';
     body.innerHTML =
+      (item.tags ? `<div class="card-tags">` +
+         item.tags.map(t => `<span class="card-tag">${t}</span>`).join('') + `</div>` : '') +
       `<div class="card-name">${item.name}</div>` +
       (item.desc ? `<div class="card-desc">${item.desc}</div>` : '') +
       (item.weight ? `<div class="card-weight">${item.weight}</div>` : '') +
@@ -1362,7 +1391,8 @@ function paintFoot(total) {
   const ch = CONFIG.channels;
   let html = '';
 
-  if (ch.max) html += `<button class="send" id="sendMax">Заказать · ${rub(total)}</button>`;
+  const eta = form.mode === 'pickup' ? '' : ` · ${CONFIG.delivery.time.replace(' минут', ' мин')}`;
+  if (ch.max) html += `<button class="send" id="sendMax">Заказать · ${rub(total)}${eta}</button>`;
 
   const row = [];
   if (ch.whatsapp) row.push(`<button class="send ghost" id="sendWa">WhatsApp</button>`);
@@ -1598,6 +1628,19 @@ const navIO = new IntersectionObserver(es => {
 sections.forEach(s => navIO.observe(s));
 
 paintBar();
+
+/* Кнопка «наверх» */
+const toTop = document.getElementById('toTop');
+toTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+let topTick = false;
+window.addEventListener('scroll', () => {
+  if (topTick) return;
+  topTick = true;
+  requestAnimationFrame(() => {
+    toTop.classList.toggle('on', window.scrollY > 700);
+    topTick = false;
+  });
+}, { passive: true });
 </script>
 </body>
 </html>
