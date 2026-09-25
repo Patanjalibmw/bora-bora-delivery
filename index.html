@@ -298,7 +298,13 @@ header, main, footer, .nav-wrap, .search-wrap, .info { position: relative; z-ind
   outline: none; -webkit-appearance: none; appearance: none;
 }
 .pick select:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(193,77,119,.12); }
-.line-pick { font-size: 10.5px; color: var(--pink2); margin-top: 3px; line-height: 1.35; }
+.line-pick {
+  display: inline-block; margin-top: 4px; padding: 0; border: 0; background: none;
+  font-size: 10.5px; line-height: 1.35; text-align: left; cursor: pointer;
+  color: var(--pink2); text-decoration: underline; text-underline-offset: 2px;
+  text-decoration-color: rgba(168,52,95,.35);
+}
+.line-pick:active { opacity: .6; }
 
 /* ── ПЛЮСИК / СТЕППЕР ── */
 .add {
@@ -844,6 +850,14 @@ const MENU = [
     ]
   },
   {
+    id: 'sauces', emoji: '🥫', title: 'Соусы',
+    items: [
+      { name: 'Сырный соус',      weight: '50 г', price: 60, img: 'img/sauce-cheese.jpg', icon: '🧀' },
+      { name: 'Соус барбекю',     weight: '50 г', price: 60, img: 'img/sauce-bbq.jpg',    icon: '🍖' },
+      { name: 'Тысяча островов',  weight: '50 г', price: 60, img: 'img/sauce-1000.jpg',   icon: '🥗' },
+    ]
+  },
+  {
     id: 'drinks', emoji: '🍹', title: 'Авторские лимонады',
     items: [
       { name: 'Лимонад цитрусовый',  weight: '0,5 л', price: 150, tags: ['✨ Новинка'], img: 'img/limonad-citrus.jpg', icon: '🍋',
@@ -1059,9 +1073,7 @@ function paintCard(id) {
 
   if (q === 0) {
     ctl.innerHTML = `<button class="add" aria-label="Добавить">+</button>`;
-    // у комбо сначала даём выбрать состав
-    ctl.querySelector('.add').onclick = e =>
-      ITEMS[id].options ? openDish(id) : add(id, e.currentTarget);
+    ctl.querySelector('.add').onclick = e => add(id, e.currentTarget);
   } else {
     ctl.innerHTML = `
       <div class="stepper">
@@ -1223,18 +1235,25 @@ document.addEventListener('keydown', e => {
 
 /* Что предложить добавить: сначала лимонады, потом мелкие закуски */
 const catItems = id => (MENU.find(c => c.id === id) || { items: [] }).items;
-const hasDrink = () => catItems('drinks').some(it => cart[it.id]);
-const hasPizza = () => catItems('pizza').some(it => cart[it.id]);
+const hasCat   = id => catItems(id).some(it => cart[it.id]);
+const hasDrink = () => hasCat('drinks');
+const hasSauce = () => hasCat('sauces');
+const hasPizza = () => hasCat('pizza');
 
 function upsellItems() {
   const free = arr => arr.filter(it => !cart[it.id]);
   const drinks = free(catItems('drinks'));
+  const sauces = free(catItems('sauces'));
   const snacks = free(catItems('snacks')).sort((a, b) => a.price - b.price);
-  return (hasDrink() ? snacks.concat(drinks) : drinks.concat(snacks)).slice(0, 5);
+
+  if (!hasDrink()) return drinks.concat(sauces, snacks).slice(0, 5);
+  if (!hasSauce()) return sauces.concat(snacks, drinks).slice(0, 5);
+  return snacks.concat(drinks, sauces).slice(0, 5);
 }
 function upsellTitle() {
   if (!hasDrink() && hasPizza()) return 'К пицце — холодный лимонад?';
   if (!hasDrink()) return 'Добавить лимонад?';
+  if (!hasSauce()) return 'Добавить соус?';
   return 'Добавить к заказу?';
 }
 
@@ -1278,7 +1297,7 @@ function paintSheet() {
         <div class="line-txt">
           <div class="line-name">${it.name}</div>
           <div class="line-price">${rub(it.price)}${it.weight ? ' · ' + it.weight : ''}</div>
-          ${it.options ? `<div class="line-pick">${esc(pickText(id))}</div>` : ''}
+          ${it.options ? `<button class="line-pick" data-edit="${id}">${esc(pickText(id))} · изменить</button>` : ''}
         </div>
         <div class="stepper">
           <button data-m="${id}" aria-label="Убрать">−</button>
@@ -1364,6 +1383,9 @@ function paintSheet() {
   /* степперы в корзине */
   sheetBody.querySelectorAll('[data-m]').forEach(b => b.onclick = () => setQty(b.dataset.m, cart[b.dataset.m] - 1));
   sheetBody.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setQty(b.dataset.p, cart[b.dataset.p] + 1));
+
+  /* правка состава комбо */
+  sheetBody.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => openDish(b.dataset.edit));
 
   /* апселл */
   sheetBody.querySelectorAll('[data-up]').forEach(b => b.onclick = () => {
