@@ -757,8 +757,12 @@ const CONFIG = {
     zone:     'Солнечнодольск и посёлок ГРЭС'
   },
 
+  // Куда сайт отправляет заказ. Пустая строка — отправки не будет,
+  // кнопка «Заказать» просто откроет MAX с готовым текстом.
+  orderEndpoint: '/api/order',
+
   // Каналы оформления заказа. Лишнее — просто поставить false.
-  channels: { max: true, whatsapp: true, sms: true, call: true }
+  channels: { max: true, whatsapp: false, sms: true, call: true }
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -881,8 +885,12 @@ function pickOf(id) {
   const it = ITEMS[id];
   if (!it || !it.options) return null;
   const cur = picks[id] || {};
-  it.options.forEach(o => { if (!o.values.includes(cur[o.label])) cur[o.label] = o.values[0]; });
+  let changed = false;
+  it.options.forEach(o => {
+    if (!o.values.includes(cur[o.label])) { cur[o.label] = o.values[0]; changed = true; }
+  });
   picks[id] = cur;
+  if (changed) savePicks();
   return cur;
 }
 const pickText = id => {
@@ -1155,7 +1163,8 @@ function closeDish() {
 
 function paintDish() {
   if (!openDishId) return;
-  const it = ITEMS[openDishId], q = cart[openDishId] || 0;
+  const id = openDishId;
+  const it = ITEMS[id], q = cart[id] || 0;
 
   dishBody.innerHTML = `
     <div class="dish-media">
@@ -1497,9 +1506,7 @@ function submit(channel) {
 
   switch (channel) {
     case 'max':
-      // MAX умеет только экран «поделиться» с готовым текстом — чат выбирает сам клиент
-      window.open('https://max.ru/:share?text=' + enc, '_blank');
-      toast('Выберите чат Bora Bora в MAX');
+      sendOrder(text, enc);
       break;
     case 'wa':
       window.open('https://wa.me/' + CONFIG.phoneRaw + '?text=' + enc, '_blank');
@@ -1512,6 +1519,42 @@ function submit(channel) {
     case 'copy':
       copy(text);
       break;
+  }
+}
+
+/* Отправляем заказ боту в чат ресторана.
+   Не получилось — откатываемся на экран «поделиться» в MAX. */
+async function sendOrder(text, enc) {
+  const btn = document.getElementById('sendMax');
+  const shareFallback = () => { location.href = 'https://max.ru/:share?text=' + enc; };
+
+  if (!CONFIG.orderEndpoint) { shareFallback(); return; }
+
+  const label = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Отправляем…'; }
+
+  try {
+    const r = await fetch(CONFIG.orderEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+    const data = await r.json().catch(() => ({}));
+
+    if (r.ok && data.ok) {
+      cart = {};
+      save();
+      Object.keys(ITEMS).forEach(paintCard);
+      paintBar();
+      closeSheet();
+      toast('Заказ принят! Перезвоним для подтверждения');
+      return;
+    }
+    shareFallback();
+  } catch (e) {
+    shareFallback();
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = label; }
   }
 }
 
