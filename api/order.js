@@ -25,10 +25,13 @@ export default async function handler(req, res) {
   if (text.length > 4000) return res.status(400).json({ ok: false, error: 'Заказ слишком длинный' });
 
   try {
-    const r = await fetch(MAX_API, {
+    // chat_id принимается ТОЛЬКО как параметр адреса:
+    // в теле запроса MAX отвечает 400 proto.payload «Can't deserialize body»
+    const url = MAX_API + '?chat_id=' + encodeURIComponent(chatId);
+    const r = await fetch(url, {
       method: 'POST',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text })
+      body: JSON.stringify({ text })
     });
 
     if (!r.ok) {
