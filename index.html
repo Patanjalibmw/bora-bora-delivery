@@ -466,6 +466,13 @@ footer { padding: 22px 20px 26px; text-align: center; }
   margin-top: 10px;
 }
 .hint b { color: var(--pink2); }
+.hint-add {
+  display: inline-block; margin-top: 8px; padding: 7px 14px; border: 0; cursor: pointer;
+  border-radius: 20px; font-size: 11.5px; font-weight: 800;
+  background: linear-gradient(135deg, var(--pink), var(--pink2)); color: #fff;
+  box-shadow: 0 3px 12px rgba(193,77,119,.3);
+}
+.hint-add:active { transform: scale(.94); }
 
 /* ── АПСЕЛЛ «ДОБАВИТЬ К ЗАКАЗУ» ── */
 .upsell { margin-top: 18px; }
@@ -752,13 +759,13 @@ const CONFIG = {
     vk:   'https://vk.ru/borabora_26'
   },
 
-  hours:  { from: 11, to: 21 },                // ⚠️ закрытие 21:00 по Яндексу, открытие уточнить
-  hoursText: 'с 11:00 до 21:00, ежедневно',
+  hours:  { from: 10, to: 21 },
+  hoursText: 'с 10:00 до 21:00, ежедневно',
 
   delivery: {
-    min:      500,    // ⚠️ минимальная сумма заказа, ₽
-    price:    150,    // ⚠️ стоимость доставки, ₽
-    free:     1500,   // ⚠️ бесплатно от этой суммы, ₽
+    min:      490,    // ровно одна пицца — минимум не должен раздражать
+    price:    150,    // стоимость доставки, ₽
+    free:     1200,   // порог бесплатной: чуть выше типовых чеков 980–1140
     time:     '40–60 минут',
     zone:     'Солнечнодольск и посёлок ГРЭС'
   },
@@ -1250,6 +1257,14 @@ function upsellItems() {
   if (!hasSauce()) return sauces.concat(snacks, drinks).slice(0, 5);
   return snacks.concat(drinks, sauces).slice(0, 5);
 }
+/* Самое дешёвое дополнение, которого хватит до бесплатной доставки */
+function freeCloser(gap) {
+  const add = catItems('sauces').concat(catItems('drinks'), catItems('snacks'));
+  return add
+    .filter(it => !cart[it.id] && it.price >= gap)
+    .sort((a, b) => a.price - b.price)[0] || null;
+}
+
 function upsellTitle() {
   if (!hasDrink() && hasPizza()) return 'К пицце — холодный лимонад?';
   if (!hasDrink()) return 'Добавить лимонад?';
@@ -1324,7 +1339,12 @@ function paintSheet() {
     if (need > 0) {
       html += `<div class="hint">До минимального заказа не хватает <b>${rub(need)}</b>. Минимум для доставки — ${rub(CONFIG.delivery.min)}.</div>`;
     } else if (toFree > 0) {
-      html += `<div class="hint">Добавьте блюд на <b>${rub(toFree)}</b> — и доставка будет бесплатной.</div>`;
+      const c = freeCloser(toFree);
+      html += c
+        ? `<div class="hint">До бесплатной доставки не хватает <b>${rub(toFree)}</b>.
+             Добавьте <b>${esc(c.name)}</b> за ${rub(c.price)} — и привезём бесплатно.
+             <button class="hint-add" data-up="${c.id}">+ Добавить</button></div>`
+        : `<div class="hint">Добавьте блюд на <b>${rub(toFree)}</b> — и доставка будет бесплатной.</div>`;
     }
   }
 
