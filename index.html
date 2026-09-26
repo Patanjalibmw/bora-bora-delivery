@@ -796,13 +796,13 @@ const MENU = [
 
       { name: 'Пицца-сет', price: 570, old: 640, img: 'img/combo-pizza.jpg', icon: '🍕', badge: 'выгода 70 ₽',
         desc: 'Любая пицца 30 см за 490 ₽ + авторский лимонад 0,5 л',
-        options: [{ label: 'Пицца', values: PIZZA_490 }, { label: 'Лимонад', values: LIMONAD }] },
+        options: [{ label: 'Пицца', values: PIZZA_490, def: 'Пепперони' }, { label: 'Лимонад', values: LIMONAD }] },
 
       { name: 'Вечер вдвоём', price: 1090, old: 1280, wide: true, img: 'img/combo-dvoe.jpg', icon: '🌺', badge: 'выгода 190 ₽',
         desc: 'Две пиццы 30 см за 490 ₽ + два авторских лимонада 0,5 л',
-        options: [{ label: 'Первая пицца', values: PIZZA_490 },
-                  { label: 'Вторая пицца', values: PIZZA_490 },
-                  { label: 'Лимонады', values: LIMONAD.concat(['Разные — на ваш вкус']) }] },
+        options: [{ label: 'Первая пицца', values: PIZZA_490, def: 'Пепперони' },
+                  { label: 'Вторая пицца', values: PIZZA_490, def: 'Маргарита' },
+                  { label: 'Лимонады', values: ['Разные'].concat(LIMONAD) }] },
 
       { name: 'Закусочный сет', price: 340, old: 400, img: 'img/combo-snack.jpg', icon: '🍟', badge: 'выгода 60 ₽',
         desc: 'Картофель фри + луковые кольца + куриные наггетсы с соусами' },
@@ -897,7 +897,7 @@ Object.keys(cart).forEach(id => { if (!ITEMS[id]) delete cart[id]; });
 const save = () => { try { localStorage.setItem(STORE, JSON.stringify(cart)); } catch (e) {} };
 
 /* Выбор внутри комбо: picks[id] = { 'Пицца': 'Пепперони', ... } */
-const PICK_STORE = 'bora-picks-v1';
+const PICK_STORE = 'bora-picks-v2';
 let picks = {};
 try { picks = JSON.parse(localStorage.getItem(PICK_STORE)) || {}; } catch (e) { picks = {}; }
 const savePicks = () => { try { localStorage.setItem(PICK_STORE, JSON.stringify(picks)); } catch (e) {} };
@@ -908,15 +908,32 @@ function pickOf(id) {
   const cur = picks[id] || {};
   let changed = false;
   it.options.forEach(o => {
-    if (!o.values.includes(cur[o.label])) { cur[o.label] = o.values[0]; changed = true; }
+    if (!o.values.includes(cur[o.label])) {
+      cur[o.label] = (o.def && o.values.includes(o.def)) ? o.def : o.values[0];
+      changed = true;
+    }
   });
   picks[id] = cur;
   if (changed) savePicks();
   return cur;
 }
+/* Для заказа администратору — с подписями, чтобы было однозначно */
 const pickText = id => {
   const p = pickOf(id);
   return p ? Object.entries(p).map(([k, v]) => `${k}: ${v}`).join(' · ') : '';
+};
+
+/* Для корзины — только значения, повторы схлопываем: «Пепперони ×2» */
+const pickShort = id => {
+  const p = pickOf(id);
+  if (!p) return '';
+  const out = [];
+  Object.values(p).forEach(v => {
+    const last = out[out.length - 1];
+    if (last && last.v === v) last.n++;
+    else out.push({ v, n: 1 });
+  });
+  return out.map(x => x.n > 1 ? `${x.v} ×${x.n}` : x.v).join(' · ');
 };
 
 /* Прошлый отправленный заказ — чтобы повторить в один тап */
@@ -1315,7 +1332,7 @@ function paintSheet() {
         <div class="line-txt">
           <div class="line-name">${it.name}</div>
           <div class="line-price">${rub(it.price)}${it.weight ? ' · ' + it.weight : ''}</div>
-          ${it.options ? `<button class="line-pick" data-edit="${id}">${esc(pickText(id))} · изменить</button>` : ''}
+          ${it.options ? `<button class="line-pick" data-edit="${id}">${esc(pickShort(id))} · изменить</button>` : ''}
         </div>
         <div class="stepper">
           <button data-m="${id}" aria-label="Убрать">−</button>
