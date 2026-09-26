@@ -6,7 +6,7 @@
 //   2. Написать боту любое сообщение из нужного чата
 //   3. Открыть /api/chatid и взять оттуда id
 
-const MAX_API = 'https://platform-api2.max.ru';
+const MAX_API = 'https://botapi.max.ru';
 
 export default async function handler(req, res) {
   const token = process.env.MAX_BOT_TOKEN;

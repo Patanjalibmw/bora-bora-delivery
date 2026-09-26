@@ -5,7 +5,7 @@
 //   MAX_BOT_TOKEN — токен бота (MAX → Чат-боты → ⋮ → Настройки)
 //   MAX_CHAT_ID   — id чата, куда падают заказы
 
-const MAX_API = 'https://platform-api2.max.ru/messages';
+const MAX_API = 'https://botapi.max.ru/messages';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
