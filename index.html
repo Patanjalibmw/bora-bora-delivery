@@ -1257,6 +1257,9 @@ function upsellItems() {
   if (!hasSauce()) return sauces.concat(snacks, drinks).slice(0, 5);
   return snacks.concat(drinks, sauces).slice(0, 5);
 }
+/* Первая буква строчной — имя блюда встаёт в середину фразы */
+const lower1 = t => t.charAt(0).toLowerCase() + t.slice(1);
+
 /* Самое дешёвое дополнение, которого хватит до бесплатной доставки */
 function freeCloser(gap) {
   const add = catItems('sauces').concat(catItems('drinks'), catItems('snacks'));
@@ -1342,7 +1345,7 @@ function paintSheet() {
       const c = freeCloser(toFree);
       html += c
         ? `<div class="hint">До бесплатной доставки не хватает <b>${rub(toFree)}</b>.
-             Добавьте <b>${esc(c.name)}</b> за ${rub(c.price)} — и привезём бесплатно.
+             Добавьте <b>${esc(lower1(c.name))}</b> за ${rub(c.price)} — и привезём бесплатно.
              <button class="hint-add" data-up="${c.id}">+ Добавить</button></div>`
         : `<div class="hint">Добавьте блюд на <b>${rub(toFree)}</b> — и доставка будет бесплатной.</div>`;
     }
