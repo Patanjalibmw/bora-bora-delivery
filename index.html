@@ -747,9 +747,9 @@ const CONFIG = {
   mapUrl:    'https://yandex.ru/maps/org/bora_bora/198910516294/',
   // Соцсети внизу страницы. Лишнее — просто стереть ссылку.
   social: {
-    inst: 'https://instagram.com/bora_bora_126',
-    tg:   'https://t.me/bora_bora_126',    // ⚠️ уточнить реальный телеграм
-    vk:   'https://vk.com/bora_bora_126'   // ⚠️ уточнить реальную группу ВК
+    inst: 'https://www.instagram.com/bora_bora_126',
+    max:  'https://max.ru/join/2TQyTrLOID54JebJCvtXVUepXSwZ7YkCQYywz0pVmcw',
+    vk:   'https://vk.ru/borabora_26'
   },
 
   hours:  { from: 11, to: 21 },                // ⚠️ закрытие 21:00 по Яндексу, открытие уточнить
@@ -1629,13 +1629,15 @@ const SOC_ICON = {
       <rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.9"/>
       <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.9"/>
       <circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>`,
-  tg: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor"
-      d="M9.8 15.6 9.6 19.7c.5 0 .7-.2 1-.5l2.4-2.3 5 3.6c.9.5 1.6.2 1.8-.9l3.3-15.3c.3-1.3-.5-1.9-1.4-1.6L1.8 9.3c-1.3.5-1.3 1.2-.2 1.5l5.1 1.6L18.5 5.2c.6-.4 1.1-.2.7.2z"/></svg>`,
+  max: `<svg viewBox="0 0 30 24" aria-hidden="true" style="width:26px">
+      <text x="15" y="17" text-anchor="middle" fill="currentColor"
+            font-family="Manrope, sans-serif" font-size="12" font-weight="800"
+            letter-spacing="-.2">MAX</text></svg>`,
   vk: `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor"
       d="M12.8 16.6h1.1s.33-.04.5-.22c.16-.16.15-.47.15-.47s-.02-1.3.58-1.5c.6-.19 1.36 1.26 2.17 1.82.61.42 1.08.33 1.08.33l2.17-.03s1.14-.07.6-.96c-.05-.07-.32-.66-1.6-1.85-1.35-1.25-1.17-1.05.45-3.22 1-1.32 1.4-2.12 1.27-2.47-.11-.33-.84-.24-.84-.24l-2.44.01s-.18-.02-.32.06c-.13.08-.21.27-.21.27s-.39 1.04-.91 1.93c-1.1 1.86-1.54 1.96-1.72 1.84-.42-.27-.31-1.07-.31-1.63 0-1.77.27-2.5-.52-2.7-.26-.06-.46-.1-1.13-.11-.87-.01-1.6 0-2.01.2-.28.14-.49.44-.36.46.16.02.53.1.73.36.25.34.24 1.11.24 1.11s.15 2.15-.35 2.42c-.34.18-.81-.19-1.79-1.89-.5-.87-.88-1.83-.88-1.83s-.07-.18-.2-.27c-.16-.12-.38-.15-.38-.15l-2.32.01s-.35.01-.48.16c-.11.14-.01.42-.01.42s1.82 4.16 3.88 6.26c1.89 1.92 4.03 1.8 4.03 1.8z"/></svg>`
 };
 const socEl = document.getElementById('socials');
-[['inst', 'Instagram'], ['tg', 'Telegram'], ['vk', 'ВКонтакте']].forEach(([k, name]) => {
+[['inst', 'Instagram'], ['max', 'MAX'], ['vk', 'ВКонтакте']].forEach(([k, name]) => {
   const url = (CONFIG.social || {})[k];
   if (!url) return;
   const a = document.createElement('a');
